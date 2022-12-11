@@ -1,5 +1,3 @@
-
-
 const Location = require('./locations.model')
 
 function findAll () {
@@ -12,9 +10,12 @@ async function findOne(id){
 	return location
 }
 
-
-
+async function deleteOne(id){
+	const location = await findOne(id)
+	return location.remove
+	//return Location.findOneAndDelete( {_id : id});
+}
 
 module.exports.findAll = findAll
 module.exports.findOne = findOne
-
+module.exports.deleteOne = deleteOne;

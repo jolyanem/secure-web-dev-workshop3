@@ -15,13 +15,14 @@ router.get('/locations', async (req, res) => {
 })
 
 router.get('/locations/:id', async(req,res) => {
-	try {
 		const location = await locationsService.findOne(req.params['id'])
 		return res.status(200).send(location)
-	} catch (e) {
-		if (e.message === "Location not found") return res.status(404).send("Location not found")
-		return res.status(400).send("Bad Request")
-	}
+
+})
+
+router.delete('/locations/:id', async (req,res)=>{
+	const location = await locationsService.deleteOne(req.params.id)
+	return res.status(200).send(location)
 })
 
 
