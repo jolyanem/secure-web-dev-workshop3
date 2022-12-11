@@ -15,7 +15,7 @@ router.get('/locations', async (req, res) => {
 })
 
 router.get('/locations/:id', async(req,res) => {
-		const location = await locationsService.findOne(req.params['id'])
+		const location = await locationsService.findLocation(req.params['id'])
 		return res.status(200).send(location)
 
 })
@@ -25,6 +25,16 @@ router.delete('/locations/:id', async (req,res)=>{
 	return res.status(200).send(location)
 })
 
+router.post('/locations', async (req,res, next) =>{
+	const locations = await locationsService.addLocation({...req.body})
+	return res.status(201).send(locations)
 
+})
+
+router.put('/locations/:id', async (req,res)=>{
+	const location = await locationsService.updateLocation(req.params.id, {...req.body, endDate:new Date(req.body.endDate), startDate: new Date(req.body.startDate)})
+	return res.status(200).send(location)
+
+})
 
 module.exports = router

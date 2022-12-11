@@ -4,7 +4,7 @@ function findAll () {
 	return Location.find();
 }
 
-async function findOne(id){
+async function findLocation(id){
 	const location = await Location.findById(id);
 	if(!location) throw new Error ("Location not found :(")
 	return location
@@ -16,6 +16,21 @@ async function deleteOne(id){
 	//return Location.findOneAndDelete( {_id : id});
 }
 
+async function addLocation(data){
+	try{
+		const instance = new Location(data)
+		return instance.save()
+	} catch(e) {
+		throw new Error("Missing film name")
+	}
+}
+
+async function updateLocation(id, update){
+	return Location.updateOne({ _id: id }, update);
+}
+
 module.exports.findAll = findAll
-module.exports.findOne = findOne
+module.exports.findLocation = findLocation
 module.exports.deleteOne = deleteOne;
+module.exports.addLocation = addLocation;
+module.exports.updateLocation = updateLocation;
