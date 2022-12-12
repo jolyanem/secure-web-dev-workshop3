@@ -21,7 +21,8 @@ router.get('/locations/:id', async(req,res) => {
 })
 
 router.delete('/locations/:id', async (req,res)=>{
-	const location = await locationsService.deleteOne(req.params.id)
+	const id = req.params.id;
+	const location = await locationsService.deleteOne({id})
 	return res.status(200).send(location)
 })
 
