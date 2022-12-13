@@ -14,7 +14,7 @@ async function checkPassword(username, password){
     const user = await User.findOne({username})
     if (!user) throw new Error("No user")
     const checking = await bcrypt.compare(password, user.password)
-    return checking
+    return user
 }
 
 async function findOne(id){
@@ -35,15 +35,12 @@ async function deleteUser(id){
 
 async function findAll () {
     const users = await User.find()
-    if (!users) throw new Error("Users not found")
+    if (!users) throw new Error("users not found")
     return users
 }
 
-async function generateTokenAndSaveUser(user) {
-    const authToken = jwt.sign({ sub : user._id.toString() }, process.env.JWT_SECRET)
-    user.authToken = authToken
-    await user.save();
-    return authToken;
+async function generateJWT(id){
+    return jwt.sign({sub:id},process.env.JWT_SECRET)
 }
 
 
@@ -54,4 +51,4 @@ module.exports = {
     updateUser,
     deleteUser,
     findAll,
-    generateTokenAndSaveUser}
+    generateJWT}

@@ -2,6 +2,8 @@ const router = require('express').Router()
 const passport = require('passport')
 const usersService = require('./users.service')
 const authorizationMiddleware = require("../middleware/authorization.middleware");
+require('../auth/jwt.strategy');
+require('../auth/local.strategy');
 
 router.post('/users/register', async(req,res) => {
     try {
@@ -19,19 +21,19 @@ router.post('/users/login',
     passport.authenticate('local',{session: false}),
     async (req,res) => {
         const userId = req.user?._id;
-        const token = await usersService.generateTokenAndSaveUser(userId);
-        res.status(200).send(token)
+        const token = await usersService.generateJWT(userId);
+        return res.status(200).send(token)
     }
 )
 
-router.get('/users/me', async(req,res) => {
-    const me = await usersService.findOne(req.user)
+router.get('/users/me', passport.authenticate('jwt',{session: false}),async(req,res) => {
+    const me = await usersService.findOne(req.user._id)
     return res.status(200).send(me)
 })
 
-router.put('/users/me', async (req,res)=>{
+router.put('/users/me',passport.authenticate('jwt',{session: false}), async (req,res)=>{
     try {
-        const me = await usersService.updateUser(req.user, req.body)
+        const me = await usersService.updateUser(req.user._id, req.body)
         return res.status(200).send(me)
     }
     catch(e) {
@@ -39,7 +41,7 @@ router.put('/users/me', async (req,res)=>{
     }
 })
 
-router.delete('/users/me', async (req,res)=>{
+router.delete('/users/me', passport.authenticate('jwt',{session: false}),async (req,res)=>{
     try{
         const me = await usersService.deleteUser(req.user)
         return res.status(200).send(me)
@@ -50,7 +52,7 @@ router.delete('/users/me', async (req,res)=>{
 })
 
 router.get('/users',
-    passport.authenticate('local',{session:false}),
+    passport.authenticate('jwt',{session:false}),
     authorizationMiddleware.canAccess(['admin','modo']),
     async (req, res) => {
         try {

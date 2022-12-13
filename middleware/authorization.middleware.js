@@ -1,4 +1,4 @@
-const canAccess = (allowedRoles = []) => (req,res) => {
+const canAccess = (allowedRoles = []) => (req,res,next) => {
     if (!allowedRoles || allowedRoles.length === 0){
         return next()
     }
