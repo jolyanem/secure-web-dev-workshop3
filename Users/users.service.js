@@ -1,20 +1,20 @@
 const User = require('./users.model')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken');
 
+
+const salt = 10
 async function register (username,password){
-    const hash = await bcrypt.hash(password,10)
-    const user = new User({username, password:hash})
-    return await user.save()
+    const hash = await bcrypt.hash(password,salt)
+    const new_user = new User({username, password:hash})
+    return await new_user.save()
 }
 
 async function checkPassword(username, password){
     const user = await User.findOne({username})
-    if (!user) {return false}
-    const match = await bcrypt.compare(password, user.password)
-    if (!match){
-        return false
-    }
-    return user
+    if (!user) throw new Error("No user")
+    const checking = await bcrypt.compare(password, user.password)
+    return checking
 }
 
 async function findOne(id){
@@ -39,4 +39,18 @@ async function findAll () {
     return users
 }
 
-module.exports = {register, checkPassword, findOne, updateUser, deleteUser, findAll}
+async function generateTokenAndSaveUser(user) {
+    const authToken = jwt.sign({ sub : user._id.toString() }, process.env.JWT_SECRET)
+    user.authToken = authToken
+    await user.save();
+    return authToken;
+}
+
+module.exports = {
+    register,
+    checkPassword,
+    findOne,
+    updateUser,
+    deleteUser,
+    findAll,
+    generateTokenAndSaveUser}

@@ -12,7 +12,6 @@ const localStrategy = require('./auth/local.strategy')
 require('dotenv').config()
 mongoose.connect(process.env.MONGO_URI).then(() => {console.log('Connected!') })
 
-
 app.use(bodyParser.json())
 app.use(locationController)
 app.use(userController)
