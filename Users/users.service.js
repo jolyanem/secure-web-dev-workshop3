@@ -46,6 +46,7 @@ async function generateTokenAndSaveUser(user) {
     return authToken;
 }
 
+
 module.exports = {
     register,
     checkPassword,

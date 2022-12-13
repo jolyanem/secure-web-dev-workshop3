@@ -66,4 +66,5 @@ router.use('/users/me',passport.authenticate('jwt', {
     session:false, failureRedirect:'/users/login'
 }));
 
+
 module.exports = router
