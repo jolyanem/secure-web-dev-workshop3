@@ -45,7 +45,8 @@ describe('Locations deleteOne', ()=>{
     });
 
     it('should throws an error if the location does not exist', async () => {
-        const id = '123';
+        jest.resetAllMocks()
+        const id = '123456';
         const deleteLocation = jest.fn().mockResolvedValue();
         Location.deleteOne = deleteLocation;
         try {
@@ -71,6 +72,7 @@ describe('Locations updateLocation', ()=>{
     });
 
     it('should throws an error if the location does not exist', async () => {
+        jest.resetAllMocks()
         const id = '123456';
         const update = { name: 'Great One', country: 'USA' };
         const updateOne = jest.fn().mockResolvedValue(null);
@@ -99,6 +101,7 @@ describe('Location AddLocation', () =>{
     });
 
     it('should throws an error if the data is invalid', async () => {
+        jest.resetAllMocks()
         const data = {};
         const save = jest.fn().mockResolvedValue(new Error('Wrong data'));
         Location.mockImplementation(() => ({
